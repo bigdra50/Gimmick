@@ -12,6 +12,8 @@ namespace Bigdra.PatternLock.Scripts
         public string HandTagName => _handTagName;
         public event Action Unlock;
         public bool IsUnlocked { get; private set; }
+        public IReadOnlyList<NodeController> NodeControllers => _nodeControllers;
+        public IReadOnlyDictionary<NodeController, Node> NodeMap => _nodeMap;
 
         [SerializeField] private DrawableArea _drawableArea;
         [SerializeField] private string _handTagName = "Hand";
@@ -33,11 +35,9 @@ namespace Bigdra.PatternLock.Scripts
 
         private Dictionary<NodeController, Node> _nodeMap = new Dictionary<NodeController, Node>();
 
-        private void Start()
+        private void Awake()
         {
-            // TODO: グラフはScriptableObjectができるまで仮置
             _targetGraph = new UndirectedGraph(_keyPattern.adjacencyMatrix);
-            //_targetGraph = new UndirectedGraph(new AdjacencyMatrix(new bool[_nodeControllers.Count, _nodeControllers.Count]));
             _currentGraph = new UndirectedGraph();
             for (var i = 0; i < _targetGraph.Nodes.Count; i++)
             {
@@ -45,29 +45,32 @@ namespace Bigdra.PatternLock.Scripts
                 _currentGraph.TryAddNode(targetGraphNode); // 正解のグラフに含まれるノードをこれから描くのに使うグラフのノードに追加
                 _nodeMap[_nodeControllers[i]] = targetGraphNode; // ノードのモデルとコントローラーの対応付け
             }
+        }
 
-            _drawableArea.ReleaseHand += () => ReleaseHand();
-            this.Unlock += () =>
+        private void Start()
+        {
+            Unlock += () =>
             {
                 Debug.Log("Unlock");
                 foreach (var edge in _updateEdgeList)
                 {
                     edge.line.material = _unlockedEdgeMaterial;
                 }
+
                 Destroy(_handDrawingLine);
             };
+            _drawableArea.ReleaseHand += () => ReleaseHand();
         }
 
         private void Update()
         {
-            if(IsUnlocked) return;
-            
             UpdateDrawingLineByHand();
             UpdateConfirmedEdgeLine();
         }
 
         private void UpdateDrawingLineByHand()
         {
+            if (IsUnlocked) return;
             if (_lastNode == null || _handTransform == null) return;
             if (!_drawableArea.CanDraw) return;
             _handDrawingLine.SetPositions(new[]
@@ -130,7 +133,6 @@ namespace Bigdra.PatternLock.Scripts
         private void ReleaseHand()
         {
             if (IsUnlocked) return;
-            _currentGraph.RemoveAllNodes();
             _currentGraph.RemoveAllEdges();
             _lastNode = null;
             _handTransform = null;

@@ -30,14 +30,12 @@ namespace Bigdra.PatternLock.Scripts
 
         private void OnEnable()
         {
-            Debug.Log("Awake");
             pattern = new bool[N, N];
             for (var i = 0; i < N; i++)
             {
                 for (var j = 0; j < N; j++)
                 {
                     pattern[i, j] = columns[i].rows[j];
-                    Debug.Log(pattern[i, j]);
                 }
             }
 

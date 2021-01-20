@@ -98,6 +98,7 @@ namespace Bigdra.Util.Graph.Scripts
         public void RemoveAllEdges()
         {
             _adjList = new Dictionary<Node, List<Node>>();
+            _edgesCount = 0;
         }
 
         private void UpdateAdjacencyMatrix()
