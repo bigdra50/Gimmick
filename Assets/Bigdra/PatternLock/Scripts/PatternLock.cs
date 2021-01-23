@@ -22,6 +22,7 @@ namespace Bigdra.PatternLock.Scripts
         [SerializeField] private List<NodeController> _nodeControllers;
         [SerializeField] private Material _edgeMaterial;
         [SerializeField] private Material _unlockedEdgeMaterial;
+        [SerializeField] private SeHandler _seHandler;
 
         private IGraph _targetGraph; // 正解パターンのグラフ
         private IGraph _currentGraph; // 現在描いているグラフ
@@ -56,7 +57,7 @@ namespace Bigdra.PatternLock.Scripts
                 {
                     edge.line.material = _unlockedEdgeMaterial;
                 }
-
+                _seHandler.PlayUnlockAudio();
                 Destroy(_handDrawingLine);
             };
             _drawableArea.ReleaseHand += () => ReleaseHand();

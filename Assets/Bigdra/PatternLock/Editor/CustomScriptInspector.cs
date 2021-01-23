@@ -60,30 +60,6 @@ namespace Bigdra.PatternLock.Editor
             }
             EditorGUILayout.EndHorizontal();
 
-
-            #region CurrentMatrixStatus
-
-            //GUILayout.Space(100);
-            //EditorGUILayout.LabelField("Current Matrix Status");
-            //EditorGUILayout.BeginHorizontal();
-            //for (var x = 0; x < Pattern.N; x++)
-            //{
-            //    EditorGUILayout.BeginVertical();
-            //    EditorGUILayout.LabelField(x.ToString(), GUILayout.Width(15));
-            //    for (var y = 0; y < Pattern.N; y++)
-            //    {
-            //        if (_pattern.columns[x] == null) continue;
-
-            //        EditorGUILayout.Toggle(_pattern.columns[x].rows[y]);
-            //    }
-
-            //    EditorGUILayout.EndVertical();
-            //}
-
-            //EditorGUILayout.EndHorizontal();
-
-            #endregion
-
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(_pattern, _pattern.name);
